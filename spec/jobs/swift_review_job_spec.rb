@@ -31,12 +31,10 @@ describe SwiftReviewJob do
       )
     end
 
-    context "linter script fails" do
+    context "runner fails" do
       it "does not enqueue a completed file review job" do
         runner = instance_double(SwiftLint::Runner)
-        allow(runner).to receive(:violations_for).and_raise(
-          SwiftLint::SystemCall::NonZeroExitStatusError,
-        )
+        allow(runner).to receive(:violations_for).and_raise(RuntimeError)
         allow(SwiftLint::Runner).to receive(:new).and_return(runner)
         allow(Resque).to receive(:enqueue)
 
@@ -48,7 +46,7 @@ describe SwiftReviewJob do
             "patch" => "test",
             "content" => "let number = 1 \n",
           )
-        rescue SwiftLint::SystemCall::NonZeroExitStatusError
+        rescue RuntimeError
           # no-op, this is caught by Resque in the real world.
         ensure
           expect(Resque).not_to have_received(:enqueue)

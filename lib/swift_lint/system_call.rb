@@ -2,7 +2,14 @@ require "open3"
 
 module SwiftLint
   class SystemCall
-    class NonZeroExitStatusError < StandardError; end
+    class NonZeroExitStatusError < StandardError
+      attr_reader :output
+
+      def initialize(message, output)
+        super(message)
+        @output = output
+      end
+    end
 
     def call(cmd)
       run_command(cmd)
@@ -10,7 +17,7 @@ module SwiftLint
       if last_command_successful?
         command_output
       else
-        raise NonZeroExitStatusError, "Command: '#{cmd}'"
+        raise NonZeroExitStatusError.new("Command: '#{cmd}'", command_output)
       end
     end
 

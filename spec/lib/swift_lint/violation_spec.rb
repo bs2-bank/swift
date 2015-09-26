@@ -66,7 +66,7 @@ describe SwiftLint::Violation do
   end
 
   def violation_string(line_number: 1, message: default_violation_message)
-    "/tmp/test.swift:#{line_number}:1: warning: #{message}"
+    "/tmp/test.swift:#{line_number}:10: warning: #{message}"
   end
 
   def default_violation_message

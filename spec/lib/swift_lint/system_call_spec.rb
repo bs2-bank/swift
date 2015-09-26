@@ -39,5 +39,14 @@ describe SwiftLint::SystemCall do
           "Command: 'printf'",
         )
     end
+
+    it "stores the command's output on the error" do
+      system = SwiftLint::SystemCall.new
+
+      expect { system.call("printf") }.to raise_error do |error|
+        expect(error.output).
+          to match(/(usage: printf format)|(printf: missing operand)/)
+      end
+    end
   end
 end

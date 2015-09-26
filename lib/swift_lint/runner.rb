@@ -25,10 +25,18 @@ module SwiftLint
 
     def execute_swiftlint(file)
       cmd = "bin/hound-swiftlint " \
-        "\"#{config.to_yaml}\" " \
-        "\"#{file.name}\" " \
-        "\"#{file.content}\""
+        "'#{escape(config.to_yaml)}' " \
+        "'#{escape(file.name)}' " \
+        "'#{escape(file.content)}'"
       system_call.call(cmd)
+    rescue SwiftLint::SystemCall::NonZeroExitStatusError => e
+      e.output
+    end
+
+    def escape(string)
+      string.
+        gsub(/'/) { "\\047" }.
+        gsub(/!/, "\\!")
     end
 
     def message_parsable?(string)

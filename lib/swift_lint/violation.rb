@@ -1,7 +1,7 @@
 module SwiftLint
   class Violation
     CLANG_REGEX = /\A
-      .+:                   # File name
+      [^:]+:                # File name
       (\d+):                # Line number
       (?:\d+:)?\s           # Column Number
       (?:warning|error):\s  # Type of message
