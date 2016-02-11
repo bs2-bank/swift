@@ -27,7 +27,7 @@ describe SwiftLint::Runner do
 
         violations = runner.violations_for(file)
 
-        expect(violations.size).to eq(2)
+        expect(violations.size).to eq(5)
       end
 
       describe "file with major violations" do
@@ -61,48 +61,9 @@ public func <*> <T, U>(f: (T -> U)?, a: T?) -> U? {
 
   def swift_major_file_content
     <<-SWIFT
-class LongMethodSpec {
-  override func spec() {
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("long method body")
-    print("41st line!")
+class ShortVariableName {
+  func tooShort(a: Int) {
+    print("I am too short \(a)")
   }
 }
     SWIFT
