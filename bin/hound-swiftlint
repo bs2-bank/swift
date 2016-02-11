@@ -5,11 +5,13 @@
 
 set -e
 
-temp_config=/tmp/swiftlint_config
+cd /tmp
+
+temp_config=swiftlint_config
 yaml_config="$1"
 file_name="$2"
 file_content="$3"
-file_path=/tmp/$file_name
+file_path=$file_name
 file_directory=$(dirname "$file_path")
 
 rm -rf "$temp_config"
