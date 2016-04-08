@@ -4,7 +4,7 @@ require "swift_lint/system_call"
 module SwiftLint
   class Runner
     def initialize(config, system_call: SystemCall.new)
-      @config = config
+      @config_file = File.new(".swiftlint.yml", config.to_yaml)
       @system_call = system_call
     end
 
@@ -16,7 +16,7 @@ module SwiftLint
 
     private
 
-    attr_reader :config, :system_call
+    attr_reader :config_file, :system_call
 
     def violation_strings(file)
       result = execute_swiftlint(file).split("\n")
@@ -24,19 +24,17 @@ module SwiftLint
     end
 
     def execute_swiftlint(file)
-      cmd = "bin/hound-swiftlint " \
-        "'#{escape(config.to_yaml)}' " \
-        "'#{escape(file.name)}' " \
-        "'#{escape(file.content)}'"
-      system_call.call(cmd)
-    rescue SwiftLint::SystemCall::NonZeroExitStatusError => e
-      e.output
+      File.in_tmpdir(file, config_file) do |dir|
+        run_swiftlint_on_system(dir)
+      end
     end
 
-    def escape(string)
-      string.
-        gsub(/'/) { "\\047" }.
-        gsub(/!/, "\\!")
+    def run_swiftlint_on_system(directory)
+      Dir.chdir(directory) do
+        system_call.call("swiftlint")
+      end
+    rescue SwiftLint::SystemCall::NonZeroExitStatusError => e
+      e.output
     end
 
     def message_parsable?(string)

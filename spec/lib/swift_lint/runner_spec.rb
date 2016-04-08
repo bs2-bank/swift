@@ -5,7 +5,7 @@ require "swift_lint/file"
 
 describe SwiftLint::Runner do
   describe "#violations_for" do
-    it "executes proper escaped system command to get violations"do
+    it "executes proper command to get violations" do
       config = ConfigOptions.new("")
       file = SwiftLint::File.new("file.swift", "let x = 'Hello'")
       system_call = SwiftLint::SystemCall.new
@@ -14,12 +14,10 @@ describe SwiftLint::Runner do
 
       runner.violations_for(file)
 
-      args = "'#{config.to_yaml}' '#{file.name}' 'let x = \\047Hello\\047'"
-      expected_command = "bin/hound-swiftlint #{args}"
-      expect(system_call).to have_received(:call).with(expected_command)
+      expect(system_call).to have_received(:call).with("swiftlint")
     end
 
-    if /darwin/ =~ RUBY_PLATFORM
+    if RUBY_PLATFORM =~ /darwin/
       it "returns all violations" do
         config = ConfigOptions.new("")
         file = SwiftLint::File.new("file.swift", swift_file_content)
@@ -27,7 +25,7 @@ describe SwiftLint::Runner do
 
         violations = runner.violations_for(file)
 
-        expect(violations.size).to eq(5)
+        expect(violations.size).to eq(6)
       end
 
       describe "file with major violations" do
@@ -48,6 +46,7 @@ describe SwiftLint::Runner do
     <<-SWIFT
 /**
     this line violates the line length contraint. this line violates the line length contraint. this line violates the line length contraint.
+    it also validates valid_docs
 */
 public func <*> <T, U>(f: (T -> U)?, a: T?) -> U? {
     print('using a function wrapped in single quotes')
