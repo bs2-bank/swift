@@ -20,7 +20,7 @@ describe SwiftLint::Runner do
     if RUBY_PLATFORM =~ /darwin/
       it "returns all violations" do
         config = ConfigOptions.new("")
-        file = SwiftLint::File.new("file.swift", swift_file_content)
+        file = SwiftLint::File.new("Foo/bar.swift", swift_file_content)
         runner = SwiftLint::Runner.new(config)
 
         violations = runner.violations_for(file)
@@ -28,15 +28,15 @@ describe SwiftLint::Runner do
         expect(violations.size).to eq(6)
       end
 
-      describe "file with major violations" do
-        it "returns all violations" do
-          config = ConfigOptions.new("")
-          file = SwiftLint::File.new("file.swift", swift_major_file_content)
+      context "when directory is excluded" do
+        it "returns no violations" do
+          config = ConfigOptions.new("excluded:\n  - Foo")
+          file = SwiftLint::File.new("Foo/bar.swift", swift_file_content)
           runner = SwiftLint::Runner.new(config)
 
           violations = runner.violations_for(file)
 
-          expect(violations.size).to eq(1)
+          expect(violations.size).to eq(0)
         end
       end
     end
@@ -54,16 +54,6 @@ public func <*> <T, U>(f: (T -> U)?, a: T?) -> U? {
     print('using backticks `')
     let colonOnWrongSide :Int = 0 as! Int
     return a.apply(f)
-}
-    SWIFT
-  end
-
-  def swift_major_file_content
-    <<-SWIFT
-class ShortVariableName {
-  func tooShort(a: Int) {
-    print("I am too short \(a)")
-  }
 }
     SWIFT
   end

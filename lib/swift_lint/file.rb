@@ -2,7 +2,7 @@ require "tmpdir"
 
 module SwiftLint
   class File
-    attr_reader :content
+    attr_reader :path, :content
 
     def initialize(path, content)
       @path = path
@@ -16,18 +16,13 @@ module SwiftLint
       end
     end
 
-    def name
-      ::File.basename(path)
-    end
-
     def write_to_dir(dir)
-      ::File.open(::File.join(dir, name), "w") do |file|
+      temp_file_path = ::File.join(dir, path)
+      FileUtils.mkdir_p(::File.dirname(temp_file_path))
+
+      ::File.open(temp_file_path, "w") do |file|
         file.write(content)
       end
     end
-
-    private
-
-    attr_reader :path
   end
 end

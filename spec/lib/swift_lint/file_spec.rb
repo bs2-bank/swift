@@ -13,14 +13,6 @@ describe SwiftLint::File do
     end
   end
 
-  describe "#name" do
-    it "returns basename from path" do
-      file = SwiftLint::File.new("/some/path/file.swift", "")
-
-      expect(file.name).to eq("file.swift")
-    end
-  end
-
   describe "#write_to_dir" do
     it "writes files in the given directory" do
       Dir.mktmpdir do |dir|
