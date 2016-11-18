@@ -25,7 +25,7 @@ describe SwiftLint::Runner do
 
         violations = runner.violations_for(file)
 
-        expect(violations.size).to eq(6)
+        expect(violations.size).to eq(5)
       end
 
       context "when directory is excluded" do
